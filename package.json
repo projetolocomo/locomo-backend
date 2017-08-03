@@ -1,0 +1,30 @@
+{
+  "name": "locomo-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "nodemon main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/projetolocomo/locomo-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/projetolocomo/locomo-backend/issues"
+  },
+  "homepage": "https://github.com/projetolocomo/locomo-backend#readme",
+  "dependencies": {
+    "bcrypt": "^1.0.2",
+    "body-parser": "^1.17.2",
+    "cors": "^2.8.4",
+    "express": "^4.8.8",
+    "jsonwebtoken": "^7.4.1",
+    "mongoose": "^4.11.5",
+    "nodemon": "^1.11.0"
+  }
+}
