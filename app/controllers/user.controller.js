@@ -15,14 +15,14 @@ module.exports.createAccount = function(req, res){
 			let promise = User.create(user);
 			promise.then(
 				function(user){
-					res.status(201).json({id:user._id, name:user.name, token:authController.generateToken(user)});
+					res.status(201).json({id:user._id, name:user.name, surname:user.surname, token:authController.generateToken(user)});
 				},
 				function(error){
 					res.status(500).json(error);
 				}
 			);
 		} else {
-			res.status(409).json({error:"email already taken"});
+			res.status(409).json({error:"emailAlreadyTaken"});
 		}
 	});
 }
