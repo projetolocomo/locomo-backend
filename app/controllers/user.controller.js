@@ -22,7 +22,7 @@ module.exports.createAccount = function(req, res){
 				}
 			);
 		} else {
-			res.status(409).json({error:"emailAlreadyTaken"});
+			res.status(409).send("emailAlreadyTaken");
 		}
 	});
 }
