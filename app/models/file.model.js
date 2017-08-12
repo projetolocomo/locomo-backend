@@ -2,28 +2,26 @@ var mongoose = require('mongoose');
 
 module.exports = function() {
   var schema = mongoose.Schema({
-    name:{
+    filename:{
       type: String,
       required: true
     },
-    textualDescription:{
+    contentType:{
       type: String,
-      required: false
-    },
-    voiceDescription:{
-      type: mongoose.Schema.ObjectId,
-      ref: 'File',
       required: false
     },
     creationDate:{
       type: Date,
       required: true
     },
-    userId:{
-      type: mongoose.Schema.ObjectId,
-      ref: 'User',
+    binaryData:{
+      type: Buffer,
       required: true
+    },
+    audioDuration:{
+      type: Number,
+      required: false
     }
   });
-  return mongoose.model('UserMap', schema);
+  return mongoose.model('File', schema);
 }();

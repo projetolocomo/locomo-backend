@@ -21,10 +21,11 @@ module.exports.generateToken = function(user){
 	return jwt.sign({_id:user._id}, sensitiveData.authenticationSecret);
 }
 
+//ID é enviado por parâmetro!!!
 module.exports.check = function(req, res, next){
 	jwt.verify(req.query.token, sensitiveData.authenticationSecret, function(err, decodedToken){
 		if (decodedToken) {
-			if (decodedToken._id == req.body.userId){
+			if (decodedToken._id == req.params.userId){
 				next();
 			} else {
 				res.status(401).send("notAuthorized");
