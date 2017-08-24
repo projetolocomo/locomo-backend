@@ -3,15 +3,16 @@ let UserMap = require('../models/map.model.js');
 let File = require('../models/file.model.js');
 
 module.exports.createMap = function(req, res){
+  console.log(req.body)
   if (req.body._id){
     let map = {
       name: req.body.name,
       textualDescription: req.body.textualDescription,
       voiceDescription: req.body.voiceDescription
     };
-    let previousVoiceDescription = req.body.previousVoiceDescription;
-    console.log(req.body)
     if (req.body.previousVoiceDescription){
+      console.log('removing ' + req.body.previousVoiceDescription);
+      let previousVoiceDescription = req.body.previousVoiceDescription;
       File.findByIdAndRemove({_id:previousVoiceDescription}).exec();
     }
     let mapId = req.body._id;

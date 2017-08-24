@@ -6,6 +6,7 @@ const path = require('path');
 var userRoutes = require('../app/routes/user.routes.js');
 var mapRoutes = require('../app/routes/map.routes.js');
 var fileRoutes = require('../app/routes/file.routes.js');
+var markerRoutes = require('../app/routes/marker.routes.js');
 
 module.exports = function(){
     var app = express();
@@ -35,6 +36,7 @@ module.exports = function(){
     userRoutes(app);
     mapRoutes(app);
     fileRoutes(app);
+    markerRoutes(app);
 
     // app.get('*', (req, res) => {
     //     res.sendfile(path.join(__dirname, '../public/index.html'));
