@@ -53,19 +53,19 @@ module.exports.createMap = function(req, res){
 }
 
 module.exports.deleteMap = function(req, res){
-  let mapId = req.params.mapId;
-  console.log(mapId)  
-  // if (voiceDescription) {
-  //   File.findByIdAndRemove({_id:voiceDescription}).exec();
-  // }
-  // let mapRemovalPromise = UserMap.findByIdAndRemove({_id:mapId}).exec().then(
-  //   function(success){
-  //     res.status(200).send("removed successfully");
-  //   },
-  //   function(error){
-  //     res.status(500).json(error);
-  //   }
-  // )
+  let mapId = req.body._id;
+  let voiceDescription = req.body.voiceDescription;
+  if (voiceDescription) {
+    File.findByIdAndRemove({_id:voiceDescription}).exec();
+  }
+  let mapRemovalPromise = UserMap.findByIdAndRemove({_id:mapId}).exec().then(
+    function(success){
+      res.status(200).json({"ok":"removed successfully"});
+    },
+    function(error){
+      res.status(500).json(error);
+    }
+  )
 };
 
 module.exports.getUserMaps = function(req, res){
