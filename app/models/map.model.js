@@ -23,6 +23,10 @@ module.exports = function() {
       type: mongoose.Schema.ObjectId,
       ref: 'User',
       required: true
+    },
+    markerCount:{
+      type:Number,
+      required: false
     }
   });
   return mongoose.model('UserMap', schema);

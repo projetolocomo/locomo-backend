@@ -32,7 +32,6 @@ module.exports.uploadFile = function(req, res){
       fs.unlink(uploadedFile.path);
       let searchByFileName = File.findOne({filename:fileToSave.filename}).then(
         function(file){
-          console.log('file ', file)
           if (file){
             res.status(200).json({_id:file._id, filename:file.filename, contentType:file.contentType, creationDate:file.creationDate, audioDuration:file.audioDuration});
           } else {
@@ -42,7 +41,7 @@ module.exports.uploadFile = function(req, res){
               },
               function(error){
                 res.status(500).json(error);
-              }        
+              }
             )
           }
         },

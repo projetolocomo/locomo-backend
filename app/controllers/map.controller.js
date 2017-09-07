@@ -3,7 +3,6 @@ let UserMap = require('../models/map.model.js');
 let File = require('../models/file.model.js');
 
 module.exports.createMap = function(req, res){
-  console.log(req.body)
   if (req.body._id){
     let map = {
       name: req.body.name,
@@ -16,7 +15,7 @@ module.exports.createMap = function(req, res){
       File.findByIdAndRemove({_id:previousVoiceDescription}).exec();
     }
     let mapId = req.body._id;
-    let updateMap = UserMap.findOneAndUpdate({_id:mapId}, map, {upsert:true}).exec().then(
+    UserMap.findOneAndUpdate({_id:mapId}, map, {upsert:true}).exec().then(
       function(success){
         let promise = UserMap.findOne({_id:mapId}).exec().then(
           function(map){
@@ -40,8 +39,7 @@ module.exports.createMap = function(req, res){
       creationDate: Date.now(),
       userId: req.params.userId
     });
-    let mapCreationPromise = UserMap.create(map);
-    mapCreationPromise.then(
+    UserMap.create(map).then(
       function(map){
         res.status(201).json(map);
       },
@@ -58,7 +56,7 @@ module.exports.deleteMap = function(req, res){
   if (voiceDescription) {
     File.findByIdAndRemove({_id:voiceDescription}).exec();
   }
-  let mapRemovalPromise = UserMap.findByIdAndRemove({_id:mapId}).exec().then(
+  UserMap.findByIdAndRemove({_id:mapId}).exec().then(
     function(success){
       res.status(200).json({"ok":"removed successfully"});
     },
@@ -70,10 +68,9 @@ module.exports.deleteMap = function(req, res){
 
 module.exports.getUserMaps = function(req, res){
   let userId = req.params.userId;
-  let promise = UserMap.find({userId:userId}).exec();
-  promise.then(
-    function(map){
-      res.status(200).json(map);
+  UserMap.find({userId:userId}).exec().then(
+    function(maps){
+      res.status(200).json(maps);
     },
     function(error){
       res.status(500).json(error);
