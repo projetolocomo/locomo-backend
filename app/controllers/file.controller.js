@@ -1,5 +1,6 @@
 let multiparty = require('multiparty');
 let fs = require('fs');
+
 let File = require('../models/file.model.js');
 
 module.exports.uploadFile = function(req, res){
@@ -28,7 +29,7 @@ module.exports.uploadFile = function(req, res){
           creationDate: Date.now(),
           binaryData: fs.readFileSync(uploadedFile.path)
         });
-      }
+      };
       fs.unlink(uploadedFile.path);
       let searchByFileName = File.findOne({filename:fileToSave.filename}).then(
         function(file){
@@ -60,8 +61,37 @@ module.exports.getFile = function(req, res){
   let promise = File.findOne({_id:fileId}).exec();
   promise.then(
     function(file){
-      res.setHeader('content-type', file.contentType);
-      res.send(file.binaryData)
+      if (file){
+        res.setHeader('content-type', file.contentType);
+        res.send(file.binaryData);
+      } else {
+        res.status(404).json({'error':'notFound'});
+      }
+    },
+    function(e){
+      res.status(500).json(e);
+    }
+  )
+}
+
+module.exports.getFileMeta = function(req, res){
+  let fileId = req.params.fileId;
+  File.findOne({_id:fileId}).exec().then(
+    function(file){
+      file.toObject();
+      let meta = {
+        _id: file._id,
+        filename: file.filename,
+        contentType: file.contentType,
+        creationDate: file.creationDate,
+      };
+      if (file.audioDuration){
+        meta.audioDuration = file.audioDuration;
+      };
+      res.status(200).json(meta);
+    },
+    function(error){
+      res.status(500).json(error);
     }
   )
 }

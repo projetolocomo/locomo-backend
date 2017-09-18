@@ -5,5 +5,5 @@ module.exports = function(app){
 	app.use('/api/:userId', authController.check);
 	app.post('/api/:userId/:mapId/markers', markerController.createMarker);
 	app.get('/api/:userId/:mapId/markers', markerController.getMapMarkers);
-	// app.delete("/api/:userId/maps/:mapId", markerController.deleteMap);
+	app.delete("/api/:userID/markers", markerController.deleteMarker);
 }

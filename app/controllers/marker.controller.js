@@ -31,7 +31,7 @@ module.exports.createMarker = function(req, res){
 		function(error){
 			res.status(500).json(error);
 		}
-	)
+	);
 }
 
 module.exports.getMapMarkers = function(req, res){
@@ -43,5 +43,12 @@ module.exports.getMapMarkers = function(req, res){
 		function(error){
 			res.status(500).json(error);
 		}
-	)
+	);
+}
+
+module.exports.deleteMarker = function(req, res){
+	let markerID = req.body._id;
+	let mapID = req.body.properties.mapId;
+	let userID = req.params.userID;
+	let savedMarker = Marker.findOne({_id:markerID}).exec();
 }

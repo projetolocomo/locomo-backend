@@ -5,4 +5,5 @@ module.exports = function(app){
   app.use("/api/:userId", authController.check);
   app.post("/api/:userId/upload", fileController.uploadFile);
   app.get("/api/:userId/files/:fileId", fileController.getFile);
+  app.get('/api/:userId/files/:fileId/meta', fileController.getFileMeta);
 }
