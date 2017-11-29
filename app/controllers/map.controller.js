@@ -1,6 +1,7 @@
 let FileController = require('./file.controller.js');
 let UserMap = require('../models/map.model.js');
 let File = require('../models/file.model.js');
+let Marker = require('../models/marker.model.js');
 
 module.exports.createMap = function(req, res){
   if (req.body._id){
@@ -54,13 +55,46 @@ module.exports.deleteMap = function(req, res){
   let mapId = req.body._id;
   let voiceDescription = req.body.voiceDescription;
   if (voiceDescription) {
+    console.log("removing map voice description");
     File.findByIdAndRemove({_id:voiceDescription}).exec();
   }
-  UserMap.findByIdAndRemove({_id:mapId}).exec().then(
-    function(success){
-      res.status(200).json({"ok":"removed successfully"});
+  Marker.find({'properties.mapId':mapId}).lean().exec().then(
+    function(markers){
+      // remover os marcadores e os arquivos deles pra depois remover o mapa
+      console.log("found markers: " + markers.length);      
+      for (i = 0; i < markers.length; i++) {
+        console.log(markers[i]._id);
+        Marker.findOne({_id:markers[i]._id}).lean().exec().then(
+          function(marker){
+            if (marker.properties.pictureId){
+              console.log("removing picture " + marker.properties.pictureId);
+              File.findByIdAndRemove({_id:marker.properties.pictureId}).exec();
+            }
+            if (marker.properties.voiceDescriptionId){
+              console.log("removing voice description " + marker.properties.voiceDescriptionId);
+              File.findByIdAndRemove({_id:marker.properties.voiceDescriptionId}).exec();
+            }
+          },
+          function(error){
+            console.log("mapController.deleteMap(): error while deleting markers files");
+            res.status(500).json(error);
+          }
+        )
+        Marker.findByIdAndRemove({_id:markers[i]._id}).exec();
+        console.log("removed marker " + markers[i]._id);
+      }
+      UserMap.findByIdAndRemove({_id:mapId}).exec().then(
+        function(success){
+          res.status(200).json({"ok":"removed successfully"});
+        },
+        function(error){
+          console.log("mapController.deleteMap(): error while deleting map");
+          res.status(500).json(error);
+        }
+      )
     },
     function(error){
+      console.log("mapController.deleteMap(): map not found");
       res.status(500).json(error);
     }
   )

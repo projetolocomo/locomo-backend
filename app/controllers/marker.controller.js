@@ -1,5 +1,6 @@
 let UserMap = require('../models/map.model.js');
 let Marker = require('../models/marker.model.js');
+let File = require('../models/file.model.js');
 
 module.exports.createMarker = function(req, res){
 	console.log(req.body);
@@ -50,5 +51,26 @@ module.exports.deleteMarker = function(req, res){
 	let markerID = req.body._id;
 	let mapID = req.body.properties.mapId;
 	let userID = req.params.userID;
-	let savedMarker = Marker.findOne({_id:markerID}).exec();
+	let savedMarker = Marker.findOne({_id:markerID}).exec().then(
+		function(marker){
+			if (marker.properties.pictureId){
+				File.findByIdAndRemove({_id:marker.properties.pictureId}).exec();
+			}
+			if (marker.properties.voiceDescriptionId){
+				File.findByIdAndRemove({_id:marker.properties.voiceDescriptionId}).exec();
+			}
+			Marker.findByIdAndRemove({_id:marker._id}).exec().then(
+				function(success){
+					UserMap.findByIdAndUpdate(mapID, {$inc: {markerCount:-1}}).exec();
+					res.status(200).json({"ok":"removed successfully"});
+				},
+				function(error){
+				  res.status(500).json(error);
+				}
+			)
+		},
+		function(error){
+			res.status(500).json(error);
+		}
+	)
 }
